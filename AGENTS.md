@@ -1,8 +1,8 @@
-# Kestra Template Plugin
+# Kestra Mercury Plugin
 
 ## What
 
-- Provides plugin components under `io.kestra.plugin.templates`.
+- Provides plugin components under `io.kestra.plugin.mercury`.
 - Includes classes such as `Example`, `Trigger`.
 
 ## Why
@@ -17,7 +17,7 @@
 
 Single-module plugin. Source packages under `io.kestra.plugin`:
 
-- `templates`
+- `mercury`
 
 Infrastructure dependencies (Docker Compose services):
 
@@ -25,14 +25,14 @@ Infrastructure dependencies (Docker Compose services):
 
 ### Key Plugin Classes
 
-- `io.kestra.plugin.templates.Example`
+- `io.kestra.plugin.mercury.Example`
 
 ### Project Structure
 
 ```
-plugin-template/
-├── src/main/java/io/kestra/plugin/templates/
-├── src/test/java/io/kestra/plugin/templates/
+plugin-mercury/
+├── src/main/java/io/kestra/plugin/mercury/
+├── src/test/java/io/kestra/plugin/mercury/
 ├── build.gradle
 └── README.md
 ```
