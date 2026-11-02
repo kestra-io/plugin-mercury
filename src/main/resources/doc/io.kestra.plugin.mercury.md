@@ -119,3 +119,38 @@ Download an official statement PDF for a Mercury depository bank account directl
   - `statementId` (UUID)
 - **Optional fields:**
   - `baseUrl` (default: `https://api.mercury.com/api/v1`)
+
+## Triggers
+
+### `io.kestra.plugin.mercury.transactions.TransactionTrigger`
+
+Periodically polls the Mercury API for new transactions in a specific bank account, deduplicating records across polling intervals using a lookback window and the namespace KV store.
+
+- **Required fields:**
+  - `accountId` (UUID)
+  - `apiToken`
+- **Optional fields:**
+  - `baseUrl` (default: `https://api.mercury.com/api/v1`)
+  - `fetchType` (default: `FETCH`; options: `FETCH`, `FETCH_ONE`, `STORE`, `NONE`)
+  - `interval` (default: `PT5M`)
+  - `limit` (default: `1000`, min: `1`, max: `1000`)
+  - `lookback` (default: `PT24H`)
+  - `pageCap` (default: `100`, min: `1`)
+  - `search`
+  - `status` (options: `PENDING`, `SENT`, `CANCELLED`, `FAILED`, `REVERSED`, `BLOCKED`)
+- **Outputs:** `size`, `rows` (FETCH), `row` (FETCH_ONE), `uri` (STORE), `transaction` (first new transaction), `account.id`. `fetchType` only shapes the output: every new transaction is fetched and marked as seen. The watermark advances on every successful poll.
+
+### `io.kestra.plugin.mercury.accounts.BalanceThresholdTrigger`
+
+Periodically polls Mercury bank account balances and triggers an execution when an account drops below a configured minimum threshold.
+
+- **Required fields:**
+  - `apiToken`
+  - `minBalance` (USD amount)
+- **Optional fields:**
+  - `accountId` (UUID; when omitted, all active Mercury accounts are evaluated)
+  - `balanceType` (default: `AVAILABLE`; options: `AVAILABLE`, `CURRENT`)
+  - `baseUrl` (default: `https://api.mercury.com/api/v1`)
+  - `interval` (default: `PT5M`)
+  - `pageCap` (default: `100`, min: `1`)
+- **Outputs:** `size`, `account` (`id`, `name`, `balance`, `minBalance` of the first account below threshold), `balance`, `accounts[]` (all accounts newly below threshold). Accounts with an unknown balance are skipped.
